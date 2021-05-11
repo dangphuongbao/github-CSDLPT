@@ -6,6 +6,15 @@
 package UI_CSDLPT;
 
 import java.awt.Button;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -16,11 +25,60 @@ public class Main {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    static Connection connect1 = null;
+    static Connection connect2 = null;
+    static Connection connect3 = null;
+
+    public static void main(String[] args) throws ClassNotFoundException {
         // TODO code application logic here
-        MainFrame m = new MainFrame();
-        Button btn = new Button();
+        LoginFrame m = new LoginFrame();
+        try {
+            //Button btn = new Button();
+            server("Server1");
+        } catch (SQLException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
         m.setVisible(true);
     }
-    
+
+    static void  server(String server) throws SQLException {
+        System.out.println(server); // TODO Auto-generated catch block
+        switch (server) {
+            case "Server1":
+                Connection conn1 = connect("45678");
+                connect1 = conn1;
+                break;
+            case "Server2":
+                Connection conn2 = connect("45670");
+                connect2 = conn2;
+                break;
+            case "Server3":
+                Connection conn3 = connect("45671");
+                connect3 = conn3;
+                break;
+                
+            default:
+                break;
+        }
+    }
+        public static Connection connect(String port) throws SQLException {
+//		String dbURL = "jdbc:sqlserver://localhost:+" + port + ";databaseName=DANGKYTOUR;user=sa;password=root";
+
+        String dbURL  = null;
+        if(Integer.parseInt(port) == 45678) {
+            dbURL = "jdbc:sqlserver://localhost:+"+port+";databaseName=KanBos;user=sa;password=bk" ;
+        }else if(Integer.parseInt(port) == 45670) {
+            dbURL = "jdbc:sqlserver://localhost:+" + port + ";databaseName=KanBos;user=sa;password=bk";
+        }else if(Integer.parseInt(port) == 45671) {
+            dbURL = "jdbc:sqlserver://localhost:+" + port + ";databaseName=KanBos;user=sa;password=bk";
+        }
+
+        Connection conn = null;
+        conn = DriverManager.getConnection(dbURL);
+
+        DatabaseMetaData dm = (DatabaseMetaData) conn.getMetaData();
+        System.out.println("Product name: " + dm.getURL());
+
+        return conn;
+    }
 }
