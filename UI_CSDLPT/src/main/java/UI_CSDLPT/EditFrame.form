@@ -54,12 +54,12 @@
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
                               <Component id="jTextField1" max="32767" attributes="0"/>
                               <Component id="jTextField2" max="32767" attributes="0"/>
-                              <Component id="jTextField3" max="32767" attributes="0"/>
-                              <Component id="jTextField4" pref="185" max="32767" attributes="0"/>
+                              <Component id="jTextField4" max="32767" attributes="0"/>
+                              <Component id="jComboBox1" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
-                  <EmptySpace pref="177" max="32767" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -78,8 +78,8 @@
                   </Group>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="jTextField3" pref="44" max="32767" attributes="0"/>
-                      <Component id="jLabel3" max="32767" attributes="0"/>
+                      <Component id="jLabel3" pref="44" max="32767" attributes="0"/>
+                      <Component id="jComboBox1" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
@@ -146,13 +146,6 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextField2ActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JTextField" name="jTextField3">
-          <Properties>
-            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Serif" size="14" style="0"/>
-            </Property>
-          </Properties>
-        </Component>
         <Component class="javax.swing.JTextField" name="jTextField4">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
@@ -167,6 +160,38 @@
             </Property>
             <Property name="text" type="java.lang.String" value="S&#x1eed;a"/>
           </Properties>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="jComboBox1">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Serif" size="14" style="0"/>
+            </Property>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+              <StringArray count="18">
+                <StringItem index="0" value="CDTM - Tr&#x1b0;&#x1edd;ng Cao &#x111;&#x1eb3;ng Th&#x1b0;&#x1a1;ng m&#x1ea1;i &#x110;&#xe0; N&#x1eb5;ng"/>
+                <StringItem index="1" value="CFI - Tr&#x1b0;&#x1edd;ng Cao &#x111;&#x1eb3;ng L&#x1b0;&#x1a1;ng th&#x1ef1;c Th&#x1ef1;c ph&#x1ea9;m"/>
+                <StringItem index="2" value="DAU - &#x110;&#x1ea1;i h&#x1ecd;c Ki&#x1ebf;n tr&#xfa;c &#x110;&#xe0; N&#x1eb5;ng"/>
+                <StringItem index="3" value="DUE - &#x110;&#x1ea1;i h&#x1ecd;c Kinh t&#x1ebf; &#x110;&#xe0; N&#x1eb5;ng"/>
+                <StringItem index="4" value="DUT - &#x110;&#x1ea1;i h&#x1ecd;c B&#xe1;ch khoa &#x110;&#xe0; N&#x1eb5;ng"/>
+                <StringItem index="5" value="DVTC - Cao &#x111;&#x1eb3;ng Du l&#x1ecb;ch &#x110;&#xe0; N&#x1eb5;ng"/>
+                <StringItem index="6" value="FPT - &#x110;&#x1ea1;i h&#x1ecd;c FPT"/>
+                <StringItem index="7" value="GWU - Tr&#x1b0;&#x1edd;ng &#x110;&#x1ea1;i h&#x1ecd;c Greenwich &#x110;&#xe0; N&#x1eb5;ng"/>
+                <StringItem index="8" value="HCMA3 - H&#x1ecd;c vi&#x1ec7;n Ch&#xed;nh tr&#x1ecb; - H&#xe0;nh ch&#xed;nh khu v&#x1ef1;c III"/>
+                <StringItem index="9" value="SMP - Khoa Y D&#x1b0;&#x1ee3;c, &#x110;&#x1ea1;i h&#x1ecd;c &#x110;&#xe0; N&#x1eb5;ng"/>
+                <StringItem index="10" value="UDA - &#x110;&#x1ea1;i h&#x1ecd;c &#x110;&#xf4;ng &#xc1;"/>
+                <StringItem index="11" value="UED - &#x110;&#x1ea1;i h&#x1ecd;c S&#x1b0; ph&#x1ea1;m &#x110;&#xe0; N&#x1eb5;ng"/>
+                <StringItem index="12" value="UFL - &#x110;&#x1ea1;i h&#x1ecd;c Ngo&#x1ea1;i ng&#x1eef;     &#x110;&#xe0; N&#x1eb5;ng"/>
+                <StringItem index="13" value="UPES3 - &#x110;&#x1ea1;i h&#x1ecd;c Th&#x1ec3; d&#x1ee5;c Th&#x1ec3; thao &#x110;&#xe0; N&#x1eb5;ng"/>
+                <StringItem index="14" value="UTE - &#x110;&#x1ea1;i h&#x1ecd;c S&#x1b0; ph&#x1ea1;m K&#x1ef9; thu&#x1ead;t &#x110;&#xe0; N&#x1eb5;ng"/>
+                <StringItem index="15" value="VKU - &#x110;&#x1ea1;i h&#x1ecd;c C&#xf4;ng ngh&#x1ec7; th&#xf4;ng tin v&#xe0; Truy&#x1ec1;n th&#xf4;ng V - H"/>
+                <StringItem index="16" value="VNUK - Vi&#x1ec7;n Nghi&#xea;n c&#x1ee9;u v&#xe0; &#x110;&#xe0;o t&#x1ea1;o Vi&#x1ec7;t - Anh"/>
+                <StringItem index="17" value=" "/>
+              </StringArray>
+            </Property>
+          </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+          </AuxValues>
         </Component>
       </SubComponents>
     </Container>
