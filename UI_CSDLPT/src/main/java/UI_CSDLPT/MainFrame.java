@@ -5,21 +5,16 @@
  */
 package UI_CSDLPT;
 
-import java.awt.Button;
-import java.awt.event.ActionEvent;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.security.auth.callback.Callback;
-import javax.swing.JFrame;
 import javax.swing.table.TableColumn;
-import javax.swing.text.TableView.TableCell;
-import javax.xml.crypto.Data;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 /**
@@ -28,7 +23,10 @@ import javax.swing.table.DefaultTableModel;
  */
 
 public class MainFrame extends javax.swing.JFrame {
-    
+    String [] curriculumItems = new String[5];
+    int id;
+    String UserName;
+    static Connection connServer = Main.connect;
     /**
      * Creates new form MainFrame
      */
@@ -36,25 +34,61 @@ public class MainFrame extends javax.swing.JFrame {
         initComponents();
         TableColumn col = tbCurriculum.getColumnModel().getColumn(0);
         col.setPreferredWidth(1);
-        
         showCurriculum();
     }
 
+        static void  selectedServer(String server) throws SQLException {
+        String dbURL;
+        switch (server) {
+            case "Server 1":
+                dbURL = "jdbc:sqlserver://localhost:45678;databaseName=KanBos;user=sa;password=as" ;
+                Connection conn1 = connect(dbURL);
+                connServer = conn1;
+                break;
+            case "Server 2":
+                dbURL = "jdbc:sqlserver://localhost:45679;databaseName=KanBos;user=sa;password=as" ;
+                Connection conn2 = connect(dbURL);
+                connServer = conn2;
+                break;
+            case "Server 3":
+                dbURL = "jdbc:sqlserver://localhost:45670;databaseName=KanBos;user=sa;password=as" ;
+                Connection conn3 = connect(dbURL);
+                connServer = conn3;
+                break;
+            case "Server4":
+                Connection conn4 = connect("45671");
+                connServer = conn4;
+                break;
+                
+            default:
+                break;
+        }
+    }
+        public static Connection connect(String dbURL) throws SQLException {
+//		String dbURL = "jdbc:sqlserver://localhost:+" + port + ";databaseName=DANGKYTOUR;user=sa;password=root";
+        Connection conn = null;
+        conn = DriverManager.getConnection(dbURL);
+
+        //DatabaseMetaData dm = (DatabaseMetaData) conn.getMetaData();
+        //System.out.println("Product name: " + dm.getURL());
+
+        return conn;
+    }
+    
     public ArrayList<Curriculum>curriculumList(){
         ArrayList<Curriculum> curriculumList = new ArrayList<>();
         
-        String url = "jdbc:sqlserver://localhost:45678;databaseName=KanBos;user=sa;password=bk";
+        //String url = "jdbc:sqlserver://localhost:45678;databaseName=KanBos;user=sa;password=bk";
         try {
-            Connection conn = DriverManager.getConnection(url);
-            String query = "SELECT Curriculum.ID, Curriculum.curriculum, Curriculum.author, School.school, Speciality.speciality  FROM Curriculum "
-                    + "INNER JOIN School ON Curriculum.ID_School = School.ID INNER JOIN Speciality ON Curriculum.ID_Speciality = Speciality.ID";
+            Connection conn = connServer;
+            String query = "SELECT Curriculum.ID, Curriculum.curriculum, Curriculum.author, School.school, Curriculum.speciality  FROM Curriculum "
+                    + "INNER JOIN School ON Curriculum.ID_School = School.ID";
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery(query);
             Curriculum curriculum;
             while (rs.next()) {                
                 curriculum = new Curriculum(rs.getInt("ID"),rs.getString("curriculum"), rs.getString("author"), rs.getString("school"), rs.getString("speciality"));
                 curriculumList.add(curriculum);
-                System.out.println("select success");
             }
         } catch (SQLException ex) {
             Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
@@ -78,6 +112,23 @@ public class MainFrame extends javax.swing.JFrame {
         }
     }
     
+    public String[] getRowAt(int row) {
+     String[] result = new String[5];
+
+     for (int i =0; i <5; i++) {
+         if (i == 0) {
+             id = (int) tbCurriculum.getModel().getValueAt(row, i);
+              result[0] = String.valueOf(id);
+         }
+         else{
+             result[i] = (String) tbCurriculum.getModel().getValueAt(row, i);
+         }
+        
+         //System.out.println("eee"+result[i]);
+     }
+
+     return result;
+}
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -94,7 +145,7 @@ public class MainFrame extends javax.swing.JFrame {
         btnAdd = new javax.swing.JButton();
         btnEdit = new javax.swing.JButton();
         btnDelete = new javax.swing.JButton();
-        districtList = new javax.swing.JComboBox<>();
+        serverList = new javax.swing.JComboBox<>();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbCurriculum = new javax.swing.JTable();
 
@@ -130,12 +181,17 @@ public class MainFrame extends javax.swing.JFrame {
 
         btnDelete.setFont(new java.awt.Font("Serif", 0, 14)); // NOI18N
         btnDelete.setText("Xoá");
-
-        districtList.setFont(new java.awt.Font("Serif", 0, 14)); // NOI18N
-        districtList.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Quận Ngũ Hành Sơn", "Quận Sơn Trà", "Quận Hải Châu", "Quận Cẩm Lệ", "Quận Mỹ Khê", "Quân Hoà Khánh", " " }));
-        districtList.addActionListener(new java.awt.event.ActionListener() {
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                districtListActionPerformed(evt);
+                btnDeleteActionPerformed(evt);
+            }
+        });
+
+        serverList.setFont(new java.awt.Font("Serif", 0, 14)); // NOI18N
+        serverList.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Server 1", "Server 2", "Server 3" }));
+        serverList.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                serverListActionPerformed(evt);
             }
         });
 
@@ -156,6 +212,11 @@ public class MainFrame extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        tbCurriculum.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbCurriculumMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tbCurriculum);
 
         javax.swing.GroupLayout jInternalFrame1Layout = new javax.swing.GroupLayout(jInternalFrame1.getContentPane());
@@ -172,7 +233,7 @@ public class MainFrame extends javax.swing.JFrame {
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(tfUserName)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(districtList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(serverList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addComponent(jLabel1)))
                 .addGap(0, 29, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jInternalFrame1Layout.createSequentialGroup()
@@ -192,7 +253,7 @@ public class MainFrame extends javax.swing.JFrame {
                 .addGroup(jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(tfUserName, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(districtList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(serverList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(44, 44, 44)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 315, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -217,17 +278,64 @@ public class MainFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void districtListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_districtListActionPerformed
-        String district = districtList.getSelectedItem().toString();
-    }//GEN-LAST:event_districtListActionPerformed
+    private void serverListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_serverListActionPerformed
+        String selectedServer = serverList.getSelectedItem().toString();
+        try {
+            selectedServer(selectedServer);
+            System.out.println("done");
+        } catch (SQLException ex) {
+            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }//GEN-LAST:event_serverListActionPerformed
 
     private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
-       
+        EditFrame editFrame = new EditFrame();
+        System.out.println(curriculumItems[0]);
+        editFrame.getCurriculum(curriculumItems[0],curriculumItems[1],curriculumItems[2],curriculumItems[3],curriculumItems[4]);
+        dispose();
+        editFrame.setVisible(true);
     }//GEN-LAST:event_btnEditActionPerformed
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
-        // TODO add your handling code here:
+        dispose();
+        AddFrame addFrame = new AddFrame();
+        addFrame.setVisible(true);
     }//GEN-LAST:event_btnAddActionPerformed
+
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        int respone = JOptionPane.showConfirmDialog(null, "Bạn có chắc xoá tài liệu này ko", "Xác nhận", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        if (respone == JOptionPane.YES_OPTION) {
+            String url = "jdbc:sqlserver://localhost:45678;databaseName=KanBos;user=sa;password=as";
+        try {
+            Connection conn = connServer;
+            String query = "DELETE FROM Curriculum WHERE ID = ?";
+            PreparedStatement pst = conn.prepareStatement(query);
+            pst.setInt(1, id);
+            
+            pst.executeUpdate();
+            JOptionPane.showMessageDialog(null, "Sửa tài liệu thành công");
+            dispose();
+            MainFrame mainFrame = new MainFrame();
+            mainFrame.setVisible(true);
+        } catch (SQLException ex) {
+            Logger.getLogger(AddFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        } 
+        else if(respone == JOptionPane.NO_OPTION)  {
+            System.out.println("NO");
+        }
+        else if(respone == JOptionPane.CLOSED_OPTION){
+            System.out.println("CLOSE");
+        }
+    }//GEN-LAST:event_btnDeleteActionPerformed
+
+    private void tbCurriculumMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbCurriculumMouseClicked
+        DefaultTableModel model = (DefaultTableModel) tbCurriculum.getModel();
+        int selectedCurriculum = tbCurriculum.getSelectedRow();
+        
+        curriculumItems = getRowAt(selectedCurriculum);
+    }//GEN-LAST:event_tbCurriculumMouseClicked
 
     /**
      * @param args the command line arguments
@@ -267,7 +375,7 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
 public void helloUserName(String name){
-    System.out.println(name);
+    UserName = name;
     tfUserName.setText(name);
 }
     
@@ -275,11 +383,11 @@ public void helloUserName(String name){
     private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnEdit;
-    private javax.swing.JComboBox<String> districtList;
     private javax.swing.JInternalFrame jInternalFrame1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JComboBox<String> serverList;
     private javax.swing.JTable tbCurriculum;
     private javax.swing.JLabel tfUserName;
     // End of variables declaration//GEN-END:variables

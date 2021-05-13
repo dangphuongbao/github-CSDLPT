@@ -5,6 +5,15 @@
  */
 package UI_CSDLPT;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.ComboBoxModel;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author baobo
@@ -14,10 +23,33 @@ public class EditFrame extends javax.swing.JFrame {
     /**
      * Creates new form EditFrame
      */
+    int id;
     public EditFrame() {
         initComponents();
+        
     }
 
+    void getCurriculum(String id, String name, String author, String school, String speciality){
+        System.out.println("id: "+id);
+        this.id = Integer.parseInt(id);
+        tfName.setText(name);
+        tfAuthor.setText(author);
+        tfSpeciality.setText(speciality);
+        ComboBoxModel model = cbbSchool.getModel();
+        int size = model.getSize();
+        for (int i = 0; i < size-1; i++) {
+            String item = (String) model.getElementAt(i);
+            String[] splitItem = item.split(" - ");
+            
+            
+            if (school.equals(splitItem[1])) {
+                System.out.println(school+" "+splitItem[1]+"\n");
+                cbbSchool.setSelectedIndex(i);
+                //System.out.println("hello");
+                break;
+            }
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -32,11 +64,11 @@ public class EditFrame extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField4 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        tfName = new javax.swing.JTextField();
+        tfAuthor = new javax.swing.JTextField();
+        tfSpeciality = new javax.swing.JTextField();
+        btnEdit = new javax.swing.JButton();
+        cbbSchool = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Sửa Tài Liệu");
@@ -53,27 +85,32 @@ public class EditFrame extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("Serif", 0, 14)); // NOI18N
         jLabel4.setText("Ngành");
 
-        jTextField1.setFont(new java.awt.Font("Serif", 0, 14)); // NOI18N
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        tfName.setFont(new java.awt.Font("Serif", 0, 14)); // NOI18N
+        tfName.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                tfNameActionPerformed(evt);
             }
         });
 
-        jTextField2.setFont(new java.awt.Font("Serif", 0, 14)); // NOI18N
-        jTextField2.addActionListener(new java.awt.event.ActionListener() {
+        tfAuthor.setFont(new java.awt.Font("Serif", 0, 14)); // NOI18N
+        tfAuthor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField2ActionPerformed(evt);
+                tfAuthorActionPerformed(evt);
             }
         });
 
-        jTextField4.setFont(new java.awt.Font("Serif", 0, 14)); // NOI18N
+        tfSpeciality.setFont(new java.awt.Font("Serif", 0, 14)); // NOI18N
 
-        jButton1.setFont(new java.awt.Font("Serif", 0, 14)); // NOI18N
-        jButton1.setText("Sửa");
+        btnEdit.setFont(new java.awt.Font("Serif", 0, 14)); // NOI18N
+        btnEdit.setText("Sửa");
+        btnEdit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditActionPerformed(evt);
+            }
+        });
 
-        jComboBox1.setFont(new java.awt.Font("Serif", 0, 14)); // NOI18N
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "CDTM - Trường Cao đẳng Thương mại Đà Nẵng", "CFI - Trường Cao đẳng Lương thực Thực phẩm", "DAU - Đại học Kiến trúc Đà Nẵng", "DUE - Đại học Kinh tế Đà Nẵng", "DUT - Đại học Bách khoa Đà Nẵng", "DVTC - Cao đẳng Du lịch Đà Nẵng", "FPT - Đại học FPT", "GWU - Trường Đại học Greenwich Đà Nẵng", "HCMA3 - Học viện Chính trị - Hành chính khu vực III", "SMP - Khoa Y Dược, Đại học Đà Nẵng", "UDA - Đại học Đông Á", "UED - Đại học Sư phạm Đà Nẵng", "UFL - Đại học Ngoại ngữ     Đà Nẵng", "UPES3 - Đại học Thể dục Thể thao Đà Nẵng", "UTE - Đại học Sư phạm Kỹ thuật Đà Nẵng", "VKU - Đại học Công nghệ thông tin và Truyền thông V - H", "VNUK - Viện Nghiên cứu và Đào tạo Việt - Anh", " " }));
+        cbbSchool.setFont(new java.awt.Font("Serif", 0, 14)); // NOI18N
+        cbbSchool.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "CDTM - Trường Cao đẳng Thương mại Đà Nẵng", "CFI - Trường Cao đẳng Lương thực Thực phẩm", "DAU - Đại học Kiến trúc Đà Nẵng", "DUE - Đại học Kinh tế Đà Nẵng", "DUT - Đại học Bách khoa Đà Nẵng", "DVTC - Cao đẳng Du lịch Đà Nẵng", "FPT - Đại học FPT", "GWU - Trường Đại học Greenwich Đà Nẵng", "HCMA3 - Học viện Chính trị - Hành chính khu vực III", "SMP - Khoa Y Dược, Đại học Đà Nẵng", "UDA - Đại học Đông Á", "UED - Đại học Sư phạm Đà Nẵng", "UFL - Đại học Ngoại ngữ     Đà Nẵng", "UPES3 - Đại học Thể dục Thể thao Đà Nẵng", "UTE - Đại học Sư phạm Kỹ thuật Đà Nẵng", "VKU - Đại học Công nghệ thông tin và Truyền thông V - H", "VNUK - Viện Nghiên cứu và Đào tạo Việt - Anh", " " }));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -82,7 +119,7 @@ public class EditFrame extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(113, 113, 113)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnEdit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -91,10 +128,10 @@ public class EditFrame extends javax.swing.JFrame {
                             .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE))
                         .addGap(29, 29, 29)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jTextField1)
-                            .addComponent(jTextField2)
-                            .addComponent(jTextField4)
-                            .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(tfName)
+                            .addComponent(tfAuthor)
+                            .addComponent(tfSpeciality)
+                            .addComponent(cbbSchool, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -102,22 +139,22 @@ public class EditFrame extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(103, 103, 103)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE)
+                    .addComponent(tfName, javax.swing.GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE)
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE)
+                    .addComponent(tfAuthor, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 44, Short.MAX_VALUE)
-                    .addComponent(jComboBox1))
+                    .addComponent(cbbSchool))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE))
+                    .addComponent(tfSpeciality, javax.swing.GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE))
                 .addGap(50, 50, 50)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(66, Short.MAX_VALUE))
         );
 
@@ -135,13 +172,36 @@ public class EditFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void tfNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfNameActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_tfNameActionPerformed
 
-    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
+    private void tfAuthorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfAuthorActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField2ActionPerformed
+    }//GEN-LAST:event_tfAuthorActionPerformed
+
+    private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
+        String url = "jdbc:sqlserver://localhost:45678;databaseName=KanBos;user=sa;password=bk";
+        try {
+            Connection conn = MainFrame.connServer;
+            String query = "UPDATE Curriculum SET curriculum =? , author =? , ID_School =? , speciality =? WHERE ID = ?";
+            PreparedStatement pst = conn.prepareStatement(query);
+            pst.setString(1, tfName.getText().toString().trim());
+            pst.setString(2, tfAuthor.getText().toString().trim());
+            String selectedSchool = cbbSchool.getSelectedItem().toString().trim();
+            String[] splitSchool = selectedSchool.split(" - ");
+            pst.setString(3, splitSchool[0]);
+            pst.setString(4, tfSpeciality.getText().toString().trim());
+            pst.setInt(5, id);
+            pst.executeUpdate();
+            JOptionPane.showMessageDialog(null, "Sửa tài liệu thành công");
+            dispose();
+            MainFrame mainFrame = new MainFrame();
+            mainFrame.setVisible(true);
+        } catch (SQLException ex) {
+            Logger.getLogger(AddFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnEditActionPerformed
 
     /**
      * @param args the command line arguments
@@ -179,15 +239,15 @@ public class EditFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JButton btnEdit;
+    public javax.swing.JComboBox<String> cbbSchool;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField4;
+    public javax.swing.JTextField tfAuthor;
+    public javax.swing.JTextField tfName;
+    public javax.swing.JTextField tfSpeciality;
     // End of variables declaration//GEN-END:variables
 }

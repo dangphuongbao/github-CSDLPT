@@ -123,12 +123,12 @@ public class LoginFrame extends javax.swing.JFrame {
 
     private void BtnSignInActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnSignInActionPerformed
         
-        Connection conn = Main.connect1;
+        Connection conn = Main.connect;
         System.out.println(conn);
         int cmnd = Integer.parseInt(tfCmnd.getText().toString().trim());
         String password = tfPassword.getText().trim();
         String sql = "SELECT * FROM Users WHERE Identity_Card =? AND Password =?";
-        System.out.println(sql);
+        System.out.println(cmnd);
         PreparedStatement pst;
         try {
             pst = conn.prepareStatement(sql);

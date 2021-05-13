@@ -19,6 +19,13 @@ public class Curriculum {
     public Curriculum() {
     }
 
+    public Curriculum(String name, String author, String school, String speciality) {
+        this.name = name;
+        this.author = author;
+        this.school = school;
+        this.speciality = speciality;
+    }
+
     public Curriculum(int id, String name, String author, String school, String speciality) {
         this.id = id;
         this.name = name;
